@@ -1,59 +1,98 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Inventario TI – Sistema web de inventario de equipos de cómputo
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Aplicación en **Laravel + MariaDB** (Proyecto Integrador, UNIAJC).
+Incluye: inicio de sesión con roles, CRUD de equipos, mantenimientos, ubicaciones,
+tipos de equipo, responsables y usuarios, código QR por equipo, alertas de obsolescencia
+y reportes.
 
-## About Laravel
+> Esta carpeta **no es un proyecto Laravel completo**: trae solo los archivos propios
+> (`app/`, `routes/`, `resources/`, `lang/`, `tests/`, `database/`). Se copian encima de un proyecto
+> Laravel nuevo (paso 2).
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Requisitos
+- XAMPP con **PHP 8.2 o superior** (Apache + MySQL/MariaDB + phpMyAdmin)
+- Composer (https://getcomposer.org)
+- Git
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Instalación paso a paso
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+1. **Crear el proyecto Laravel** (en una carpeta de tu elección, por ejemplo `C:\proyectos`):
+   ```
+   composer create-project laravel/laravel inventario-ti
+   cd inventario-ti
+   ```
+2. **Copiar los archivos de esta carpeta** dentro de `inventario-ti`, aceptando
+   reemplazar los existentes (`routes/web.php`, `app/Models/User.php`, `tests/Feature/ExampleTest.php`).
+   Copia las carpetas `app`, `routes`, `resources`, `lang`, `tests` y `database`.
+3. **Importar la base de datos**: en phpMyAdmin → *Importar* → archivo `database/inventario_ti.sql`.
+4. **Configurar `.env`**: aplica los cambios de `LEEME-env.txt`.
+5. **Limpiar la configuración y arrancar**:
+   ```
+   php artisan config:clear
+   php artisan serve
+   ```
+6. Abre http://127.0.0.1:8000 e inicia sesión.
 
-## Learning Laravel
+## Usuarios de prueba (contraseña de todos: `Admin123*`)
+| Correo | Rol |
+|---|---|
+| admin@inventario.test | Administrador |
+| tecnico@inventario.test | Técnico |
+| consulta@inventario.test | Consulta |
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+## Permisos por rol
+| Acción | Administrador | Técnico | Consulta |
+|---|:--:|:--:|:--:|
+| Ver equipos, mantenimientos, alertas, reportes | ✔ | ✔ | ✔ |
+| Registrar / editar equipos y mantenimientos | ✔ | ✔ | ✖ |
+| Dar de baja un equipo | ✔ | ✔ | ✖ |
+| Gestionar responsables | ✔ | ✔ | ✖ |
+| Eliminar equipos y mantenimientos | ✔ | ✖ | ✖ |
+| Gestionar tipos, ubicaciones, usuarios y parámetros | ✔ | ✖ | ✖ |
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## Regla de obsolescencia
+Un equipo (no dado de baja) genera alerta si su **antigüedad ≥ vida útil** (5 años por defecto)
+**o** si tiene **≥ 3 fallas en los últimos 12 meses**. Los tres valores se cambian en
+*Administración → Parámetros de obsolescencia*.
 
-## Laravel Sponsors
+## Probar el QR desde el celular
+El QR guarda la dirección de la ficha del equipo. Para que el celular la abra, el servidor debe
+verse desde la red:
+```
+php artisan serve --host=0.0.0.0 --port=8000
+```
+Abre el sistema en el computador con `http://IP-DE-TU-PC:8000` (por ejemplo `http://192.168.1.15:8000`;
+la IP se ve con `ipconfig`), genera el QR y escanéalo con el celular conectado al mismo WiFi.
+Si no abre, permite el puerto 8000 en el Firewall de Windows.
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+## Mapa del código (para la sustentación)
+| Carpeta / archivo | Qué hace |
+|---|---|
+| `routes/web.php` | Todas las rutas y qué roles pueden usarlas |
+| `app/Http/Middleware/RolMiddleware.php` | Bloquea el acceso según el rol |
+| `app/Models/` | Un modelo por tabla (Eloquent) y sus relaciones |
+| `app/Models/Equipo.php` | Incluye la regla de obsolescencia |
+| `app/Http/Controllers/` | La lógica de cada módulo (validar, guardar, consultar) |
+| `resources/views/` | Pantallas (Blade + Bootstrap, responsive) |
+| `lang/` | Mensajes de validación y paginación en español |
+| `database/inventario_ti.sql` | Script de la base de datos con datos de prueba |
+| `tests/` | Pruebas automáticas (`php artisan test`) |
 
-### Premium Partners
+## Subir a Git
+```
+git init
+git add .
+git commit -m "Sistema web de inventario de equipos de cómputo"
+git branch -M main
+git remote add origin https://github.com/TU-USUARIO/inventario-ti.git
+git push -u origin main
+```
+(El archivo `.env` no se sube; por eso se incluye `LEEME-env.txt`.)
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
-
-## Contributing
-
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+## Problemas frecuentes
+- **`Unknown database 'inventario_ti'`**: falta importar el `.sql` o el nombre en `.env` es distinto.
+- **`could not find driver`**: activa `extension=pdo_mysql` en `php.ini` de XAMPP y reinicia Apache.
+- **`Access denied for user 'root'`**: revisa `DB_USERNAME` y `DB_PASSWORD` en `.env`.
+- **`419 Page Expired`**: borra las cookies del navegador y verifica `SESSION_DRIVER=file`.
+- **Pantalla en blanco o error 500**: abre `storage/logs/laravel.log` y revisa la última línea.
+- Después de cambiar el `.env`, ejecuta siempre `php artisan config:clear`.

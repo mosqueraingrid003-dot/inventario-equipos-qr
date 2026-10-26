@@ -1,0 +1,21 @@
+=== Cambios que debes hacer en el archivo .env de tu proyecto Laravel ===
+(Busca estas líneas y déjalas así. Si no existen, agrégalas.)
+
+APP_NAME="Inventario TI"
+APP_LOCALE=es
+APP_FALLBACK_LOCALE=es
+APP_URL=http://127.0.0.1:8000
+
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=inventario_ti
+DB_USERNAME=root
+DB_PASSWORD=
+
+SESSION_DRIVER=file
+CACHE_STORE=file
+QUEUE_CONNECTION=sync
+
+# Importante: NO ejecutes "php artisan migrate". Las tablas ya existen porque
+# importaste inventario_ti.sql en phpMyAdmin.

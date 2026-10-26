@@ -2,18 +2,19 @@
 
 namespace Tests\Feature;
 
-// use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class ExampleTest extends TestCase
 {
-    /**
-     * A basic test example.
-     */
-    public function test_the_application_returns_a_successful_response(): void
+    /** Sin iniciar sesión, la página principal manda al login. */
+    public function test_la_pagina_principal_redirige_al_login(): void
     {
-        $response = $this->get('/');
+        $this->get('/')->assertRedirect('/login');
+    }
 
-        $response->assertStatus(200);
+    /** La pantalla de login se muestra correctamente. */
+    public function test_el_login_se_muestra(): void
+    {
+        $this->get('/login')->assertOk()->assertSee('Inventario TI');
     }
 }
