@@ -1,98 +1,171 @@
-# Inventario TI – Sistema web de inventario de equipos de cómputo
+Inventario TI – Sistema web de inventario de equipos de cómputo
+Aplicación en Laravel + MariaDB (Proyecto Integrador, UNIAJC).
 
-Aplicación en **Laravel + MariaDB** (Proyecto Integrador, UNIAJC).
-Incluye: inicio de sesión con roles, CRUD de equipos, mantenimientos, ubicaciones,
-tipos de equipo, responsables y usuarios, código QR por equipo, alertas de obsolescencia
-y reportes.
+Integrantes
+Ingrid Vanessa Mosquera Mosquera
+Andersson Sinisterra Angulo
+Descripción
+Sistema web para la gestión de inventarios de equipos de cómputo.
 
-> Esta carpeta **no es un proyecto Laravel completo**: trae solo los archivos propios
-> (`app/`, `routes/`, `resources/`, `lang/`, `tests/`, `database/`). Se copian encima de un proyecto
-> Laravel nuevo (paso 2).
+Incluye:
 
-## Requisitos
-- XAMPP con **PHP 8.2 o superior** (Apache + MySQL/MariaDB + phpMyAdmin)
-- Composer (https://getcomposer.org)
-- Git
+Inicio de sesión con roles.
+CRUD de equipos.
+CRUD de mantenimientos.
+CRUD de ubicaciones.
+CRUD de tipos de equipo.
+CRUD de responsables.
+CRUD de usuarios.
+Generación de código QR por equipo.
+Alertas de obsolescencia.
+Reportes del sistema.
+Estado actual del proyecto
+Versión correspondiente a la entrega de implementación inicial.
 
-## Instalación paso a paso
+Actualmente el sistema permite:
 
-1. **Crear el proyecto Laravel** (en una carpeta de tu elección, por ejemplo `C:\proyectos`):
-   ```
-   composer create-project laravel/laravel inventario-ti
-   cd inventario-ti
-   ```
-2. **Copiar los archivos de esta carpeta** dentro de `inventario-ti`, aceptando
-   reemplazar los existentes (`routes/web.php`, `app/Models/User.php`, `tests/Feature/ExampleTest.php`).
-   Copia las carpetas `app`, `routes`, `resources`, `lang`, `tests` y `database`.
-3. **Importar la base de datos**: en phpMyAdmin → *Importar* → archivo `database/inventario_ti.sql`.
-4. **Configurar `.env`**: aplica los cambios de `LEEME-env.txt`.
-5. **Limpiar la configuración y arrancar**:
-   ```
-   php artisan config:clear
-   php artisan serve
-   ```
-6. Abre http://127.0.0.1:8000 e inicia sesión.
+Autenticación de usuarios.
+Gestión de equipos.
+Gestión de mantenimientos.
+Gestión de responsables.
+Gestión de ubicaciones.
+Gestión de tipos de equipo.
+Gestión de usuarios.
+Alertas de obsolescencia.
+Generación de códigos QR.
+Reportes básicos.
+Requisitos
+XAMPP con PHP 8.2 o superior
+Composer
+Git
+MariaDB o MySQL
+Instalación paso a paso
+1. Clonar repositorio
+git clone URL_DEL_REPOSITORIO
+cd inventario-equipos-qr
+2. Instalar dependencias
+composer install
+3. Crear archivo de entorno
+copy .env.example .env
+4. Generar clave de aplicación
+php artisan key:generate
+5. Crear la base de datos
+Crear una base de datos llamada:
 
-## Usuarios de prueba (contraseña de todos: `Admin123*`)
-| Correo | Rol |
-|---|---|
-| admin@inventario.test | Administrador |
-| tecnico@inventario.test | Técnico |
-| consulta@inventario.test | Consulta |
+inventario_ti
+6. Importar la base de datos
+Importar el archivo:
 
-## Permisos por rol
-| Acción | Administrador | Técnico | Consulta |
-|---|:--:|:--:|:--:|
-| Ver equipos, mantenimientos, alertas, reportes | ✔ | ✔ | ✔ |
-| Registrar / editar equipos y mantenimientos | ✔ | ✔ | ✖ |
-| Dar de baja un equipo | ✔ | ✔ | ✖ |
-| Gestionar responsables | ✔ | ✔ | ✖ |
-| Eliminar equipos y mantenimientos | ✔ | ✖ | ✖ |
-| Gestionar tipos, ubicaciones, usuarios y parámetros | ✔ | ✖ | ✖ |
+database/inventario_ti.sql
+mediante phpMyAdmin.
 
-## Regla de obsolescencia
-Un equipo (no dado de baja) genera alerta si su **antigüedad ≥ vida útil** (5 años por defecto)
-**o** si tiene **≥ 3 fallas en los últimos 12 meses**. Los tres valores se cambian en
-*Administración → Parámetros de obsolescencia*.
+7. Configurar .env
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=inventario_ti
+DB_USERNAME=root
+DB_PASSWORD=
 
-## Probar el QR desde el celular
-El QR guarda la dirección de la ficha del equipo. Para que el celular la abra, el servidor debe
-verse desde la red:
-```
+SESSION_DRIVER=file
+CACHE_STORE=file
+QUEUE_CONNECTION=sync
+8. Limpiar la configuración
+php artisan config:clear
+9. Ejecutar el proyecto
+php artisan serve
+Abrir:
+
+http://127.0.0.1:8000
+Usuarios de prueba
+Contraseña para todos:
+
+Admin123*
+Correo	Rol
+admin@inventario.test	Administrador
+tecnico@inventario.test	Técnico
+consulta@inventario.test	Consulta
+Permisos por rol
+Acción	Administrador	Técnico	Consulta
+Ver equipos, mantenimientos, alertas y reportes	✔	✔	✔
+Registrar y editar equipos	✔	✔	✖
+Registrar mantenimientos	✔	✔	✖
+Gestionar responsables	✔	✔	✖
+Gestionar usuarios	✔	✖	✖
+Gestionar parámetros	✔	✖	✖
+Eliminar registros	✔	✖	✖
+Regla de obsolescencia
+Un equipo genera alerta cuando:
+
+Tiene una antigüedad igual o superior a 5 años.
+Presenta 3 o más fallas durante los últimos 12 meses.
+Estos parámetros pueden configurarse desde el sistema.
+
+Base de datos
+El proyecto incluye el archivo:
+
+database/inventario_ti.sql
+El script contiene:
+
+Creación de tablas.
+Llaves primarias.
+Llaves foráneas.
+Restricciones.
+Relaciones.
+Datos de prueba.
+Tablas principales
+users
+roles
+equipos
+mantenimientos
+responsables
+ubicaciones
+tipos_equipo
+parametros
+Estructura del proyecto
+Carpeta / archivo	Descripción
+routes/web.php	Rutas del sistema
+app/Models	Modelos Eloquent
+app/Http/Controllers	Controladores
+resources/views	Interfaces del sistema
+database/inventario_ti.sql	Script de base de datos
+tests	Pruebas automáticas
+Probar el QR desde el celular
+Ejecutar:
+
 php artisan serve --host=0.0.0.0 --port=8000
-```
-Abre el sistema en el computador con `http://IP-DE-TU-PC:8000` (por ejemplo `http://192.168.1.15:8000`;
-la IP se ve con `ipconfig`), genera el QR y escanéalo con el celular conectado al mismo WiFi.
-Si no abre, permite el puerto 8000 en el Firewall de Windows.
+Obtener la IP del computador con:
 
-## Mapa del código (para la sustentación)
-| Carpeta / archivo | Qué hace |
-|---|---|
-| `routes/web.php` | Todas las rutas y qué roles pueden usarlas |
-| `app/Http/Middleware/RolMiddleware.php` | Bloquea el acceso según el rol |
-| `app/Models/` | Un modelo por tabla (Eloquent) y sus relaciones |
-| `app/Models/Equipo.php` | Incluye la regla de obsolescencia |
-| `app/Http/Controllers/` | La lógica de cada módulo (validar, guardar, consultar) |
-| `resources/views/` | Pantallas (Blade + Bootstrap, responsive) |
-| `lang/` | Mensajes de validación y paginación en español |
-| `database/inventario_ti.sql` | Script de la base de datos con datos de prueba |
-| `tests/` | Pruebas automáticas (`php artisan test`) |
+ipconfig
+Abrir:
 
-## Subir a Git
-```
-git init
-git add .
-git commit -m "Sistema web de inventario de equipos de cómputo"
-git branch -M main
-git remote add origin https://github.com/TU-USUARIO/inventario-ti.git
-git push -u origin main
-```
-(El archivo `.env` no se sube; por eso se incluye `LEEME-env.txt`.)
+http://IP_DEL_PC:8000
+y escanear el QR desde un celular conectado a la misma red.
 
-## Problemas frecuentes
-- **`Unknown database 'inventario_ti'`**: falta importar el `.sql` o el nombre en `.env` es distinto.
-- **`could not find driver`**: activa `extension=pdo_mysql` en `php.ini` de XAMPP y reinicia Apache.
-- **`Access denied for user 'root'`**: revisa `DB_USERNAME` y `DB_PASSWORD` en `.env`.
-- **`419 Page Expired`**: borra las cookies del navegador y verifica `SESSION_DRIVER=file`.
-- **Pantalla en blanco o error 500**: abre `storage/logs/laravel.log` y revisa la última línea.
-- Después de cambiar el `.env`, ejecuta siempre `php artisan config:clear`.
+Problemas frecuentes
+Unknown database 'inventario_ti'
+Verificar que la base de datos fue importada correctamente.
+
+could not find driver
+Activar:
+
+extension=pdo_mysql
+en el php.ini de XAMPP.
+
+Access denied for user 'root'
+Revisar:
+
+DB_USERNAME=root
+DB_PASSWORD=
+Error 419
+Ejecutar:
+
+php artisan config:clear
+y borrar las cookies del navegador.
+
+Error 500
+Revisar:
+
+storage/logs/laravel.log
+Repositorio
+Proyecto desarrollado para el Proyecto Integrador de Tecnología en Sistemas de Información - UNIAJC.
